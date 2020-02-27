@@ -33,8 +33,9 @@ const loadImageSize = (image) => {
       const { width, height } = resolveAssetSource(image);
       resolve({ width, height });
     } else {
-      Image.getSize(
+      Image.getSizeWithHeaders(
         image.uri,
+        image.headers || {},
         (width, height) => {
           // success
           resolve({ width, height });
@@ -49,8 +50,8 @@ export const getImageSizeFitWidthFromCache = (image, toWidth) => {
   const size = getImageSizeFromCache(image);
   if (size) {
     const { width, height } = size;
-    if (!width || !height) return { width: 0, height: 0 }
-    return { width: toWidth, height: toWidth * height / width };
+    if (!width || !height) return { width: 0, height: 0 };
+    return { width: toWidth, height: (toWidth * height) / width };
   }
   return {};
 };
@@ -66,6 +67,6 @@ const getImageSizeMaybeFromCache = async (image) => {
 
 export const getImageSizeFitWidth = async (image, toWidth) => {
   const { width, height } = await getImageSizeMaybeFromCache(image);
-  if (!width || !height) return { width: 0, height: 0 }
-  return { width: toWidth, height: toWidth * height / width };
+  if (!width || !height) return { width: 0, height: 0 };
+  return { width: toWidth, height: (toWidth * height) / width };
 };
